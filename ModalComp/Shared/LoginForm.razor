@@ -1,0 +1,86 @@
+﻿@using Common.Models
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12 ">
+            <div class="card BordaRelevo">
+                <!-- Card Header -->
+                <div class="card-header d-flex flex-row align-items-center justify-content-center m-0 p-0"
+                     style="background-color:lightgray;border:solid 1px;border-radius:5px;">
+                    <h4 class="m-2 ">Login</h4>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <EditForm Model="@usrio" OnValidSubmit="@Save">
+                        <DataAnnotationsValidator />
+
+                        <label style="font-size:12px;margin-bottom:0;margin-top:16px">User Name</label>
+                        <input class="form-control InBox" @bind-value ="@usrio.UserName">
+                        <ValidationMessage style="font-size:11px;color:red" For="@(() => usrio.UserName)" />
+
+                        <label style="font-size:12px;margin-bottom:0;margin-top:16px">Password</label>
+                        <input type="password" class="form-control InBox" @bind-value="@usrio.Depto" />
+                        <ValidationMessage style="font-size:11px;color:red" For="@(() => usrio.Depto)" />
+
+                    </EditForm>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer d-flex flex-row justify-content-end " style="background-color:gainsboro ;border:none 1px;border-radius:5px;">
+                    <button class="btn btn-outline-primary" type="submit" onclick="Save">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .h85 {
+        height: 85%;
+        background: azure;
+    }
+
+    .BordaRelevo {
+        max-width: 400px;
+        padding: 34px;
+        background-color: gainsboro;
+        box-shadow: 5px 10px 18px #888888;
+        border-radius: 9px;
+        border-color: black;
+        border-style: double;
+    }
+
+    .InBox {
+        background-color:  aqua;
+        border-radius: 10px;
+        border-color: gray;
+        /*border-style: solid;*/
+        border-top: none;
+        border-right: none;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string Nome { get; set; }
+
+    UserModel usrio = new UserModel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        usrio.UserName = Nome;
+        this.StateHasChanged();
+    }
+
+    public void Save()
+    {
+
+    }
+}

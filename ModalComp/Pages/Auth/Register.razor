@@ -1,0 +1,149 @@
+﻿@page "/Auth/Register"
+
+@using Common.Models;
+@using ModalComp.Shared;
+
+<TopBanner BannerTxt="Registro de Usuarios"> Admin only</TopBanner>
+
+<div class="container">
+    <div class="row mt-3 mb-2 justify-content-center">
+        <div class="col-12 d-flex flex-row align-items-center justify-content-center m-0 p-0">
+            <h2>User´s List</h2>
+        </div>
+    </div>
+    <div class="row">
+
+        <!-- Modal -ADD NEW- Trigger definition-->
+        <div class="col-md-12 d-flex flex-row justify-content-end">
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-labeled btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"
+                    @onclick="@(() => AddNew())">
+                Add New
+            </button>
+        </div>
+
+        <!-- Move records to table-->
+        <div class="col-md-12 d-flex flex-row justify-contents-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (UserModel u in Usuarios)
+                    {
+                        <tr>
+                            <td>@u.RowId</td>
+                            <td>@u.UserName</td>
+                            <td>@u.Depto</td>
+                            <td>@u.Role</td>
+                            <td>@u.Email</td>
+                            <td>
+                                <!-- Modal -Update and Delete- Trigger definitions -->
+                                <button type="button" class="btn btn-labeled btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"
+                                        @onclick="@(() => Update( u))">
+                                    Update
+                                </button>
+
+                                <button type="button" class="btn btn-labeled btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"
+                                        @onclick="@(() => Delete( u))">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ===============================================  DOCUMENTAÇÂO <<<<<<<<<<<< ======================================== -->
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://getbootstrap.com/docs/5.0/components/modal/ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="none" data-bs-backdrop="static">
+    <!-- Qdo vc tiver um tempo teste estas variaveis de estilo => style="backdrop-filter:brightness(1) grayscale(0.3) blur(2)"-->
+
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content" style="background-color: transparent;border:black">
+            <div class="modal-body my-0 p-0">
+                <RegisterForm @ref="Reg" usr="@usrio" FormAction="@Action" Refresh="@Refresh" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===============================================  DOCUMENTAÇÂO <<<<<<<<<<<< ======================================== -->
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://getbootstrap.com/docs/5.0/components/modal/ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+@code {
+    RegisterForm Reg;
+
+    List<UserModel> Usuarios = new List<UserModel>
+{
+        new UserModel( "Jose",    "Engenharia", "Manager", "Jose@abc.com",    1 ),
+        new UserModel( "Joao",    "Financeiro", "Manager", "Joao@abc.com",    2 ),
+        new UserModel( "Maria",   "Marketing",  "Admin",   "Maria@abc.com",   3 ),
+        new UserModel( "Antonio", "Marketing",  "Manager", "Antonio@abc.com", 4 )
+    };
+
+    UserModel usrio = new UserModel();
+    private string Action;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    public void AddNew()
+    {
+        usrio = new UserModel();
+        Action = "A";
+    }
+
+    public void Update(UserModel u)
+    {
+        usrio = u;
+        Action = "U";
+    }
+
+    public void Delete(UserModel u)
+    {
+        usrio = u;
+        Action = "D";
+    }
+
+    public void Refresh()
+    {
+        // This is a workaround for this example to work with some
+        // hard code instead of a database
+        // (A)dding, (D)eleting or (U)pdating user´s List and refreshing this page
+        // In your app you will probably delete the code below
+        switch (Action)
+        {
+            case "A":
+                int max = (from u in Usuarios orderby u.RowId descending select u.RowId).First();
+                Reg.usr.RowId = max + 1;
+                Usuarios.Add(Reg.usr);
+                break;
+            case "D":
+                Usuarios.RemoveAll(x => x.RowId == Reg.usr.RowId);
+                break;
+            case "U":
+                break;
+            default:
+                return;
+        }
+        //  Force page refresh
+        this.StateHasChanged();
+    }
+}

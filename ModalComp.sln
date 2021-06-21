@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModalComp", "ModalComp\ModalComp.csproj", "{B786C8BD-D917-41BC-8F4D-BAB4C2068360}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{DBC80D1A-9FFD-4681-9ED9-727089419BB3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckApiKey", "CheckApiKey\CheckApiKey.csproj", "{98B13997-8534-491B-B651-6ACB4F2A2A5E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B786C8BD-D917-41BC-8F4D-BAB4C2068360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B786C8BD-D917-41BC-8F4D-BAB4C2068360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B786C8BD-D917-41BC-8F4D-BAB4C2068360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B786C8BD-D917-41BC-8F4D-BAB4C2068360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC80D1A-9FFD-4681-9ED9-727089419BB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC80D1A-9FFD-4681-9ED9-727089419BB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC80D1A-9FFD-4681-9ED9-727089419BB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC80D1A-9FFD-4681-9ED9-727089419BB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98B13997-8534-491B-B651-6ACB4F2A2A5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98B13997-8534-491B-B651-6ACB4F2A2A5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98B13997-8534-491B-B651-6ACB4F2A2A5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98B13997-8534-491B-B651-6ACB4F2A2A5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D28B6AF1-BEFA-4ECB-A97A-72B909895023}
+	EndGlobalSection
+EndGlobal

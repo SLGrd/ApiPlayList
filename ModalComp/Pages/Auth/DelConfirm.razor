@@ -1,0 +1,120 @@
+﻿@page "/Auth/DelConfirm"
+
+@using Common.Models;
+@using ModalComp.Shared;
+
+<!-- Componente que gera o header da pagina -->
+<TopBanner BannerTxt="Registro de Usuarios"> Admin only</TopBanner>
+
+<div class="container">
+    <!-- Cabeçalho -->
+    <div class="row mt-3 mb-2 ">
+        <div class="col-12 d-flex flex-row align-items-center justify-content-center m-0 p-0">
+            <h2>User´s List</h2>
+        </div>
+    </div>
+
+    <!-- Corpo da tabela -->
+    <div class="row">
+        <!-- Move records to table-->
+        <div class="col-12 d-flex flex-row align-items-center justify-contents-center">
+            <table class="table table-hover" >
+                <thead>
+                    <tr>
+                        <!-- Texto no topo de cada coluna -->
+                        <th scope="col">Id          </th>
+                        <th scope="col">User Name   </th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Role        </th>
+                        <th scope="col">Email       </th>
+                        <th scope="col">Action      </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (UserModel u in Usuarios)
+                    {
+                        <!-- Conteudo de cada linha da tabela -->
+                        <tr>
+                            <td>@u.RowId    </td>
+                            <td>@u.UserName </td>
+                            <td>@u.Depto    </td>
+                            <td>@u.Role     </td>
+                            <td>@u.Email    </td>
+                            <td>
+                                <!-- Modal -Delete- Trigger definitions -->
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal"
+                                        @onclick="@(() => Delete(u))"> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ===============================================  DOCUMENTAÇÂO <<<<<<<<<<<< ======================================== -->
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://getbootstrap.com/docs/5.0/components/modal/ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+<!-- Modal -->
+<div class="modal" id="DeleteModal" tabindex="-1" style="backdrop-filter:brightness(1.5) grayscale(0.9) " >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:lightgray">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Msg</p>
+            </div>
+            <div class="modal-footer" style="background:lightgray">
+                <button type="button" class="btn btn-secondary btn-sm"          data-bs-dismiss="modal" @onclick="@Cancel">Cancel</button>
+                <button type="button" class="btn btn-primary btn-danger btn-sm" data-bs-dismiss="modal" @onclick="@DeleteConfirmed">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===============================================  DOCUMENTAÇÂO <<<<<<<<<<<< ======================================== -->
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://getbootstrap.com/docs/5.0/components/modal/ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+<style>
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        background-color: lightgray;
+    }
+</style>
+
+@code {
+
+    private string Msg;
+    private int curUserId = 0;
+
+    List<UserModel> Usuarios = new List<UserModel>
+    {
+        new UserModel( "Jose",    "Engenharia", "Manager", "Jose@abc.com",    1 ),
+        new UserModel( "Joao",    "Financeiro", "Manager", "Joao@abc.com",    2 ),
+        new UserModel( "Maria",   "Marketing",  "Admin",   "Maria@abc.com",   3 ),
+        new UserModel( "Antonio", "Marketing",  "Manager", "Antonio@abc.com", 4 )
+    };
+
+    public void Delete(UserModel u)
+    {
+        // Confirmation message
+        Msg = $"Delete record #{u.RowId} - {u.UserName} ? " ;
+        // Save current user Id
+        curUserId = u.RowId;
+    }
+
+    public void Cancel()
+    {
+        //  Clear current user Id
+        curUserId = 0;
+    }
+
+    public void DeleteConfirmed()
+    {
+        // Remove a linha com o ID corrente
+        Usuarios.RemoveAll(x => x.RowId == curUserId);       
+    }
+}

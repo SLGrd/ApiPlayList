@@ -1,0 +1,171 @@
+﻿@page "/validate"
+@using System.Text
+@using System.Net.Http.Headers
+
+<!-- Top Banner - Cabeçalho -->
+<TopBanner BannerTxt="P I N G">
+    <h6 class="text-center m-2"> <span>Teste de API Key</span></h6>
+</TopBanner>
+
+<!-- Greeting Message -->
+<div class="h85 d-flex flex-row align-items-center justify-content-center m-0 p-0">
+    <div class="col-4"/>
+
+    <div class="col-4">
+        <div class="card BordaRelevo">
+            <!-- Card Header -->
+            <div class="card-header d-flex justify-content-center CardStyle" style="border-radius: 10px" >             
+                <h4 class="m-2 ">Validation Test</h4>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">URL</label>
+                <input type="text" class="form-control" @bind=Url        @onkeyup="@ClearMsg" />
+ 
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Controller</label>
+                <input type="text" class="form-control" @bind=Controller @onkeyup="@ClearMsg" />
+           
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Endpoint</label>
+                <input type="text" class="form-control" @bind=EndPoint   @onkeyup="@ClearMsg"/>                
+
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Key Name</label>
+                <input type="text" class="form-control" @bind=KeyName    @onkeyup="@ClearMsg" />
+           
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Key Value</label>
+                <input type="text" class="form-control" @bind="KeyValue" @onkeyup="@ClearMsg" />
+            
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Result</label>
+                <input type="text" class="form-control" style="background-color:@MsgColor" @bind=Msg />
+
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer d-flex flex-row justify-content-center CardStyle"  style="border-radius: 10px" >
+                <button class="btn btn-outline-primary" type="button" @onclick ="@PingBasicAuth">PING</button>                                 
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4"/>
+</div>
+
+<!-- Style -->
+<style>
+    .h85 {
+        height: 90%;
+        background-color: azure;
+        color: black;
+    }
+    .BordaRelevo {
+        border-left-width : 3px;
+        border-right-width : 3px;
+    }
+    .CardStyle {
+        background-color: gainsboro;
+        border: solid 1px; 
+        border-radius: 12px;
+    }
+</style>
+
+@code {
+    //  Dwfault values
+    private string Url        = "https://localhost:44304/"; // "Url base Address";
+    private string Controller = "BasicAuth";
+    private string EndPoint   = "Ping";
+    private string KeyName    = "CheckApi";                 // "Parameter name";
+    private string KeyValue   = "olympia";                  // "Parameter Value";
+    private string Msg        = "Result message";
+    private string MsgColor   = "Azure";
+
+    private void ClearMsg() { Msg = ""; MsgColor = "Azure";}
+
+    // ================================================================================
+    // Esta função é usada no exemplo Basic Authorization <<<< ========================
+    // ================================================================================
+    private async void PingBasicAuth()
+    {
+        try
+        {
+            // Instancia o cliente que vai requisitar o servico da Api
+            HttpClient h = new HttpClient();
+            // Informa o endereço base (parte fixa) da API            
+            h.BaseAddress = new Uri( Url);
+
+            // Transforma o argumento da Autorização em CodeBase64
+            // Veja o video sobre CodeBase64 : https://youtu.be/EHaMT5q5UGA
+
+            var bytes = Encoding.UTF8.GetBytes( $"{KeyName}:{KeyValue}");
+            var encodedString = Convert.ToBase64String(bytes);
+            // Cria o header da AUTHORIZATION : 
+            // Indicador do Tipo de Autorização ("Basic ") + UserName:Password (codeBase64 encoded)
+            // Este é o padrão exigido para Basic Authorization
+            h.DefaultRequestHeaders.Add( "Authorization", "Basic " + encodedString);
+            
+            //  Envia o request (getasync) 
+            using (HttpResponseMessage m = await h.GetAsync($"{Controller}/{EndPoint}"))
+            {
+                if (m.IsSuccessStatusCode)
+                {
+                    // Aqui vai o codigo se teve sucesso
+                    var dados = await m.Content.ReadAsStringAsync();
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightGreen";
+                } else
+                {   
+                    //  Aqui vai o codigo se nao teve sucesso 
+                    var dados = await m.Content.ReadAsStringAsync();    
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightYellow";
+                }
+            }            
+        } 
+        catch ( Exception ex)
+        {
+            Msg = "Validation error : " + ex.Message ;  
+            MsgColor = "Tomato"; 
+        }
+        this.StateHasChanged();
+    }
+
+    // ================================================================================
+    // Esta função é usada no exemplo CHECKAPIKEY <<<< ================================
+    // ================================================================================
+    private async void PingKey()
+    {
+        try
+        {
+            // Instancia o cliente que vai requisitar o servico da Api
+            HttpClient h = new HttpClient();
+            // Informa o endereço base (parte fixa) da API            
+            h.BaseAddress = new Uri( Url);
+            //  Informa o par: nome da chave e valor da chave
+            h.DefaultRequestHeaders.Add( KeyName, KeyValue);
+            
+            // Envia o request (getasync) e fornece o endpoint (destino final do Http request)
+            using (HttpResponseMessage m = await h.GetAsync($"{Controller}/{EndPoint}"))
+            {
+                if (m.IsSuccessStatusCode)
+                {
+                    // Aqui vai o codigo se teve sucesso
+                    var dados = await m.Content.ReadAsStringAsync();
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightGreen";
+                } else
+                {   
+                    //  Aqui vai o codigo se nao teve sucesso 
+                    var dados = await m.Content.ReadAsStringAsync();    
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightYellow";
+                }
+            }            
+        } 
+        catch ( Exception ex)
+        {
+            Msg = "Validation error : " + ex.Message ;  
+            MsgColor = "Tomato"; 
+        }
+        this.StateHasChanged();
+    }
+}

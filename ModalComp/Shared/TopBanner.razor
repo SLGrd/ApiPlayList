@@ -1,0 +1,19 @@
+﻿<div class="banner d-flex flex-column align-items-center justify-content-center">
+    <h5 class="m-0 p-0">@BannerTxt</h5>
+    @ChildContent
+</div>
+
+<style>
+    .banner {
+        height: 10%;
+        background-color: mediumslateblue;
+        color: beige;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string BannerTxt { get; set; } = string.Empty;
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

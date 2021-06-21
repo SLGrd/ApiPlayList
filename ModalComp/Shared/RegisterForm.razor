@@ -1,0 +1,157 @@
+﻿@using Common.Models;
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Forms;
+
+<!-- Edit form definition -->
+<EditForm Model="@usr" OnValidSubmit="@Save" OnInvalidSubmit="@DataFormError">
+    <DataAnnotationsValidator />
+
+    <div class="card BordaRelevo">
+        <!-- Card Header -->
+        <div class="card-header d-flex justify-content-center"
+                style="background-color:lightgrey;border:solid 1px;border-radius:5px;">
+            <h4 class="m-2 ">Register</h4>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+            <label style="font-size:12px;margin-bottom:0;margin-top:16px">User Name</label>
+            <InputText type="text" class="form-control InBox" @bind-Value="@usr.UserName" />
+            <ValidationMessage style="font-size:11px;color:red" For="@(() => usr.UserName)" />
+
+            <label style="font-size:12px;margin-bottom:0;margin-top:16px">Departamento</label>
+            <InputText class="form-control InBox" type="text" @bind-Value="@usr.Depto" />
+            <ValidationMessage style="font-size:11px;color:red" For="@(() => usr.Depto)" />
+
+            <label style="font-size:12px;margin-bottom:0;margin-top:16px">Role</label>
+            <InputSelect class="form-control InBox" @bind-Value="@usr.Role" style="background-color:gainsboro;">
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Sales">Sales</option>
+                <option value="Eng">Eng</option>
+            </InputSelect>
+            <ValidationMessage style="font-size:11px;color:red" For="@(() => usr.Role)" />
+
+            <label style="font-size:12px;margin-bottom:0;margin-top:16px">Email</label>
+            <InputText type="text" class="form-control InBox" @bind-Value="@usr.Email" />
+            <ValidationMessage style="font-size:11px;color:red" For="@(() => usr.Email)" />
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer d-flex flex-row justify-content-end " style="background-color:gainsboro ;border:none 1px;border-radius:5px;">
+                        
+            @if (@ShowButton)
+            {
+                    <button class="btn btn-outline-primary mx-4" type="button" data-bs-dismiss="modal" >Cancel</button>
+                @if (@FormAction == "A")
+                {
+                    <button class="btn btn-outline-primary" type="submit">ADD NEW</button>
+                }
+                @if (@FormAction == "U")
+                {
+                    <button class="btn btn-outline-primary" type="submit">UPDATE</button>
+                }
+                @if (@FormAction == "D")
+                {
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal" @onclick ="@Delete">DELETE</button>
+                }
+            } else 
+            { 
+                <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal"  @onclick ="@Close">CLOSE</button>                        
+            }
+        </div>
+    </div>
+
+</EditForm>
+
+<style>
+    .BordaRelevo {
+        max-width: auto;
+        padding: 34px;
+        background-color: gainsboro;
+        box-shadow: 5px 10px 8px #101010;
+        border-radius: 9px;
+        border-color: black;
+        border-style: double;
+        margin: 5px 10px;
+    }
+
+    .InBox {
+        background-color: gainsboro;
+        border-radius: 10px;
+        border-color: gray;
+        border-style: solid;
+        border-top: none;
+        border-right: none;
+    }
+</style>
+
+@code{
+    [Parameter]
+    public UserModel usr { get; set; }
+    [Parameter]
+    public string FormAction { get; set; }
+    [Parameter]
+    public EventCallback Refresh { get; set; }
+
+    private bool ShowButton = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        return base.OnParametersSetAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+    public void DataFormError()
+    {
+        return;
+    }
+
+    public async void Save()
+    {
+        // This is the spot to insert your API or SQL call
+        //------------------------------------------------
+        //------------------------------------------------
+
+        // This is a workaround to simulate a database action
+        // You will probably erase this line in your app
+        await CallBackRoutine();
+
+        // Disable ADD buttons
+        ShowButton = false;
+        StateHasChanged();
+    }
+
+    public async void Delete()
+    {
+        // This is the spot to insert your API or SQL call
+        //------------------------------------------------
+        //------------------------------------------------
+
+        // This is a workaround to simulate a database action     
+        // You will probably erase this line in your app
+        await CallBackRoutine();
+    }
+
+    public void Close()
+    {
+        // Re enables ADD buttons on next modal call
+        ShowButton = true;
+    }
+
+    public async Task CallBackRoutine()
+    {
+        // Este refresh move os dados da tela para o grid
+        await Refresh.InvokeAsync();
+    }
+}

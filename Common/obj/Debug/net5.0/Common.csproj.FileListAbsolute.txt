@@ -1,0 +1,12 @@
+D:\Tutorials\ModalComp\ModalComp\Common\bin\Debug\net5.0\Common.deps.json
+D:\Tutorials\ModalComp\ModalComp\Common\bin\Debug\net5.0\Common.dll
+D:\Tutorials\ModalComp\ModalComp\Common\bin\Debug\net5.0\ref\Common.dll
+D:\Tutorials\ModalComp\ModalComp\Common\bin\Debug\net5.0\Common.pdb
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.AssemblyInfoInputs.cache
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.AssemblyInfo.cs
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.csproj.CoreCompileInputs.cache
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.dll
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\ref\Common.dll
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.pdb
+D:\Tutorials\ModalComp\ModalComp\Common\obj\Debug\net5.0\Common.csproj.AssemblyReference.cache
