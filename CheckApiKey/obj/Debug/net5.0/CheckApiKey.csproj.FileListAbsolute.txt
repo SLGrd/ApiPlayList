@@ -34,3 +34,10 @@ D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\System.Net.Http.Fo
 D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\System.Web.Http.dll
 D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Newtonsoft.Json.dll
 D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Tutorials\ModalComp\ModalComp\CheckApiKey\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll

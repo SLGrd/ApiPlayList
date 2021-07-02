@@ -1,0 +1,147 @@
+﻿@page "/Token/Generate"
+@using System.Text
+@using System.Net.Http.Headers
+@using Common.Models;
+@using static Common.Glb;
+@using Newtonsoft.Json.Converters
+@using Newtonsoft.Json
+
+<!-- Top Banner - Cabeçalho -->
+<TopBanner BannerTxt="P I N G">
+    <h6 class="text-center m-2"> <span>Geração de Tokens</span></h6>
+</TopBanner>
+
+<!-- Greeting Message -->
+<div class="h85 d-flex flex-row align-items-center justify-content-center m-0 p-0">
+    <div class="col-4"/>
+
+    <div class="col-4">
+        <div class="card BordaRelevo">
+            <!-- Card Header -->
+            <div class="card-header d-flex justify-content-center CardStyle" style="border-radius: 10px" >             
+                <h4 class="m-2 ">Token Generator</h4>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">URL</label>
+                <input type="text" class="form-control" @bind=Url        @onkeyup="@ClearMsg" />
+ 
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Controller</label>
+                <input type="text" class="form-control" @bind=Controller @onkeyup="@ClearMsg" />
+           
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Endpoint</label>
+                <input type="text" class="form-control" @bind=EndPoint   @onkeyup="@ClearMsg"/>                
+
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px" >User Name</label>
+                <input type="text" class="form-control" @bind=KeyName    @onkeyup="@ClearMsg" placeholder="Nome do Usuario"/>
+           
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px" >Password</label>
+                <input type="text" class="form-control" @bind="KeyValue" @onkeyup="@ClearMsg" placeholder="Senha"/>
+            
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Result</label>
+                <input type="text" class="form-control" style="background-color:@MsgColor" @bind=Msg />
+
+                <label style="font-size:12px;margin-bottom:0;margin-top:16px">Generated Token</label>
+                <textarea rows="4" cols="50" class="form-control" style="background-color:@MsgColor" @bind=TokenValue />
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer d-flex flex-row justify-content-center CardStyle"  style="border-radius: 10px" >
+                <button class="btn btn-outline-primary" type="button" @onclick ="@PingBasicAuth">GO</button>                                 
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4"/>
+</div>
+
+<!-- Style -->
+<style>
+    .h85 {
+        height: 90%;
+        background-color: azure;
+        color: black;
+    }
+    .BordaRelevo {
+        border-left-width : 3px;
+        border-right-width : 3px;
+    }
+    .CardStyle {
+        background-color: gainsboro;
+        border: solid 1px; 
+        border-radius: 12px;
+    }
+</style>
+
+@code {
+    //  Dwfault values
+    private string Url        = "https://localhost:44304/"; // "Url base Address";
+    private string Controller = "JwtBearer";
+    private string EndPoint   = "Login";
+    private string KeyName    = "Gerubal";                         
+    private string KeyValue   = "Pascoal";                         
+    private string Msg        = "Result message";
+    private string MsgColor   = "Azure";
+    private string TokenValue = "";
+
+    private void ClearMsg() { Msg = ""; TokenValue = "";  MsgColor = "Azure";}
+
+    // ================================================================================
+    // Esta função é usada no exemplo Basic Authorization <<<< ========================
+    // ================================================================================
+    private async void PingBasicAuth()
+    {
+        try
+        {
+            UserToken usr = new UserToken()
+            {
+                Username = KeyName,
+                Password = KeyValue
+            };
+             
+            // Send the POST Request to the Authentication Server   
+            string json = JsonConvert.SerializeObject( usr);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using (var h = new HttpClient())
+            {
+                //  Define o modo de recebimento dos dados (JSON) . Poderia ser XML por ex;
+                h.DefaultRequestHeaders.Accept.Clear();
+                h.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue("application/json"));
+                //  Informa o endereço base (parte fixa) da API
+                h.BaseAddress = new Uri( Url);
+                // Error here
+                var httpResponse = await h.PostAsync($"/{Controller}/{EndPoint}", httpContent);
+                if (httpResponse.Content != null)
+                {
+                    // Error Here
+                    Msg = httpResponse.ReasonPhrase;
+                    string dados = await httpResponse.Content.ReadAsStringAsync();
+
+                    if (Msg.Equals("OK"))
+                    {                        
+                        ResponseToken r = JsonConvert.DeserializeObject< ResponseToken>( dados);
+                        TokenValue = r.token;
+                        MsgColor = "LightGreen";
+                        LastGeneratedToken = r.token;
+                    }
+                    else
+                    {
+                        TokenValue = dados;
+                        MsgColor = "LightYellow";
+                    }                                                                                
+                    //  Screen Refresh
+                    this.StateHasChanged();
+                }
+            }    
+        } 
+        catch ( Exception ex)
+        {
+            Msg = "Validation error : " + ex.Message ;  
+            MsgColor = "Tomato"; 
+        }
+        this.StateHasChanged();
+    }
+}

@@ -25,7 +25,7 @@ namespace CheckApiKey.Attributes
         {
             //  Seta contador de tempo
             DataI = DateTime.Now;
-
+            
             // Get configuration file
             var config = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 

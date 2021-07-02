@@ -1,0 +1,122 @@
+﻿@page "/Token/Validate"
+@using System.Text
+@using System.Net.Http.Headers
+@using static Common.Glb;
+
+<!-- Top Banner - Cabeçalho -->
+<TopBanner BannerTxt="P I N G">
+    <h6 class="text-center m-2"> <span>Token Validator</span></h6>
+</TopBanner>
+
+<!-- Greeting Message -->
+<div class="h85 d-flex flex-row align-items-center justify-content-center m-0 p-0">    
+        <div class="col-4"/>
+
+        <div class="col-4">
+            <div class="card BordaRelevo">
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-center CardStyle" style="border-radius: 10px" >             
+                    <h4 class="m-2 ">Token Validator</h4>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+
+                    <label style="font-size:12px;margin-bottom:0;margin-top:16px">URL</label>
+                    <input type="text" class="form-control" @bind=Url        @onkeyup="@ClearMsg" />
+ 
+                    <label style="font-size:12px;margin-bottom:0;margin-top:16px">Controller</label>
+                    <input type="text" class="form-control" @bind=Controller @onkeyup="@ClearMsg" />
+           
+                    <label style="font-size:12px;margin-bottom:0;margin-top:16px">Endpoint</label>
+                    <input type="text" class="form-control" @bind=EndPoint   @onkeyup="@ClearMsg"/>                
+
+                    <label style="font-size:12px;margin-bottom:0;margin-top:16px">Token</label>
+                    <textarea rows="4" cols="50" class="form-control" @bind=Token @onkeyup="@ClearMsg" />           
+            
+                    <label style="font-size:12px;margin-bottom:0;margin-top:16px">Result</label>
+                    <textarea rows="4" cols="50" class="form-control" style="background-color:@MsgColor" @bind=Msg />
+
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer d-flex flex-row justify-content-center CardStyle"  style="border-radius: 10px" >
+                    <button class="btn btn-outline-primary" type="button" @onclick ="@PingToken">PING</button>                                 
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4"/>
+</div>
+
+<!-- Style -->
+<style>
+    .h85 {
+        height: 90%;
+        background-color: azure;
+        color: black;
+    }
+    .BordaRelevo {
+        border-left-width : 3px;
+        border-right-width : 3px;
+    }
+    .CardStyle {
+        background-color: gainsboro;
+        border: solid 1px; 
+        border-radius: 12px;
+    }
+</style>
+
+@code {
+    //  Dwfault values
+    private string Url        = "https://localhost:44304/"; // "Url base Address";
+    private string Controller = "JwtBearer";
+    private string EndPoint   = "AcessoLivre";
+    private string Token      = LastGeneratedToken;
+    private string Msg        = "Result message";
+    private string MsgColor   = "Azure";
+
+    private void ClearMsg() { Msg = ""; MsgColor = "Azure";}
+
+    // ================================================================================
+    // Esta função é usada no exemplo Bearer Token Authorization <<<< =================
+    // ================================================================================
+    private async void PingToken()
+    {
+        try
+        {
+            // Instancia o cliente que vai requisitar o servico da Api
+            HttpClient h = new HttpClient();
+            // Informa o endereço base (parte fixa) da API            
+            h.BaseAddress = new Uri( Url);
+
+            // Cria o header da AUTHORIZATION : 
+            // Indicador do Tipo de Autorização ("Bearer ") + Token (gerado na função TokenGenerate)            
+            h.DefaultRequestHeaders.Add( "Authorization", "Bearer " + Token);
+            
+            //  Envia o request (getasync) 
+            using (HttpResponseMessage m = await h.GetAsync($"{Controller}/{EndPoint}"))
+            {
+                if (m.IsSuccessStatusCode)
+                {
+                    // Aqui vai o codigo se teve sucesso
+                    var dados = await m.Content.ReadAsStringAsync();
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightGreen";
+                } else
+                {   
+                    //  Aqui vai o codigo se nao teve sucesso 
+                    var dados = await m.Content.ReadAsStringAsync();    
+                    Msg = m.StatusCode + " : " + dados.ToString();
+                    MsgColor = "LightYellow";
+                }
+            }            
+        } 
+        catch ( Exception ex)
+        {
+            Msg = "Validation error : " + ex.Message ;  
+            MsgColor = "Tomato"; 
+        }
+        this.StateHasChanged();
+    }
+}
